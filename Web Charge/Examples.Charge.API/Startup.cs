@@ -62,6 +62,8 @@ namespace Examples.Charge.API
                     options.IncludeXmlComments(xmlWebApiFile);
                 }
             });
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -71,14 +73,19 @@ namespace Examples.Charge.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
+
             app.UseSwagger();
 
-            app.UseSwaggerUI(options =>
+            app.UseSwaggerUI(c =>
             {
-                options.SwaggerEndpoint("../swagger/v1/swagger.json", "Example Api");
-                options.DisplayRequestDuration();
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
             });
-
 
             app.UseMvc();
         }
